@@ -1,0 +1,1 @@
+export { predictWinner } from "./tool";

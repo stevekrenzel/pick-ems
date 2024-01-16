@@ -1,0 +1,76 @@
+{
+  "name": "pick-ems-agent",
+  "version": "0.0.1",
+  "description": "An LLM-powered agent that chooses NFL teams in a pick 'em pool.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "postinstall": "npm run add-hooks && npx playwright install",
+    "test": "npm run clean && npm run build && npx jest",
+    "watch": "npx nodemon --watch src --watch test -e js,ts -x 'npm run test'",
+    "build": "npm run clean && npx tsc",
+    "start": "npm run build && node dist/src/index.js",
+    "clean": "rm -rf dist",
+    "format": "npx prettier --write --ignore-unknown .",
+    "check-format": "npx prettier --check --ignore-unknown .",
+    "add-hooks": "git config core.hooksPath .githooks",
+    "remove-hooks": "git config --unset core.hooksPath"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevekrenzel/pick-ems-agent.git"
+  },
+  "files": [
+    "dist/src/**/*",
+    "readme.md"
+  ],
+  "keywords": [
+    "llm",
+    "large language model",
+    "pickems",
+    "gpt-4",
+    "openai"
+  ],
+  "author": "Steve Krenzel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stevekrenzel/pick-ems-agent/issues"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern"
+  },
+  "homepage": "https://github.com/stevekrenzel/pick-ems-agent#readme",
+  "jest": {
+    "testMatch": [
+      "**/dist/src/**/*_test.js"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/dist/src/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.8",
+    "jest": "^29.7.0",
+    "json-schema-to-ts": "^3.0.0",
+    "lint-staged": "^13.2.2",
+    "nodemon": "^3.0.1",
+    "prettier": "^2.8.8",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "openai": "^4.24.7",
+    "playwright": "^1.39.0",
+    "tslib": "^2.5.0"
+  }
+}
