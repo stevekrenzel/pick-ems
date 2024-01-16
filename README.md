@@ -1,4 +1,4 @@
-# Pick-Em's LLM Bot
+# :football: Pick-Em's LLM Bot
 
 This is an LLM agent built on top of OpenAI that predicts winners for [ESPN's
 Pick-Em's game](https://fantasy.espn.com/games/nfl-pigskin-pickem-2023).
