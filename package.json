@@ -1,11 +1,11 @@
 {
-  "name": "pick-ems-agent",
+  "name": "pick-ems-bot",
   "version": "0.0.1",
-  "description": "An LLM-powered agent that chooses NFL teams in a pick 'em pool.",
+  "description": "An LLM-powered agent that chooses NFL teams in a pick'ems pool.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "postinstall": "npm run add-hooks && npx playwright install",
+    "postinstall": "cp -n .env.example .env && npm run add-hooks && npx playwright install",
     "test": "npm run clean && npm run build && npx jest",
     "watch": "npx nodemon --watch src --watch test -e js,ts -x 'npm run test'",
     "build": "npm run clean && npx tsc",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stevekrenzel/pick-ems-agent.git"
+    "url": "git+https://github.com/stevekrenzel/pick-ems.git"
   },
   "files": [
     "dist/src/**/*",
@@ -34,12 +34,12 @@
   "author": "Steve Krenzel",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stevekrenzel/pick-ems-agent/issues"
+    "url": "https://github.com/stevekrenzel/pick-ems/issues"
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern"
   },
-  "homepage": "https://github.com/stevekrenzel/pick-ems-agent#readme",
+  "homepage": "https://github.com/stevekrenzel/pick-ems#readme",
   "jest": {
     "testMatch": [
       "**/dist/src/**/*_test.js"
