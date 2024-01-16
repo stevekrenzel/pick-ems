@@ -59,8 +59,14 @@ export class ArticleRepo {
     // all sharing the same browser instance.
     const articles: Article[] = [];
     for (const url of urls) {
-      const article = await this.fetchOne(url);
-      articles.push(article);
+      try {
+        const article = await this.fetchOne(url);
+        articles.push(article);
+      } catch (e) {
+        // Sometimes things timeout or a rogue headline sneaks in
+        // that is actually an ad. We ignore it and move on.
+        continue;
+      }
     }
 
     return articles;
