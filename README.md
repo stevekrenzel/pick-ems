@@ -9,11 +9,10 @@ At a high-level, the agent crawls a bunch of statistics and news articles on
 ESPN's website. For each match in a given week it will feed the LLM
 stats and news relevant to that match and have it predict a winner.
 
-All of the data retrieval is done by the scrapers (built using
-[Playwright](https://playwright.dev/)), the bulk of which doesn't use LLMs at
-all.
+The data retrieval is done by scraping ESPN pages (built using
+[Playwright](https://playwright.dev/)).
 
-All of the analysis of the analysis of the data is done by the LLM.
+The data analysis is done by the LLM.
 
 The general division here is that anything that can be done more-or-less
 deterministically in code, we should do in code. And fallback to the LLM for

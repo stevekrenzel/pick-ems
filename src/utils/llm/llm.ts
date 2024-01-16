@@ -34,15 +34,15 @@ export async function llm<T>(
 
   // We wrap the provided schema in a parent schema that forces
   // the LLM to think and perform analysis before generating tool
-  // parameters. If we won't do this, and you ask the LLM to, for
+  // parameters. If we don't do this, and you ask the LLM to, for
   // example, generate a boolean – it will just generate a boolean
   // without putting a lot of thought into that boolean. Even if
   // your prompt uses Chain-of-Thought or similar techniques.
   //
-  // By forcing the first tool parameter the LLM generates to be
+  // By forcing the first parameter the LLM generates to be
   // that analysis, we can ensure that the LLM will not just jump
   // right into generating the tool parameters, but will also
-  // "think" about it first.
+  // write down thoughts in a scratchpad (of sorts) about it first.
   const schema = SCHEMA(toolSchema.schema) as any;
 
   const response = await openai.chat.completions.create({

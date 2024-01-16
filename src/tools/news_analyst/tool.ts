@@ -7,7 +7,7 @@ export type NewsAnalysis = (typeof SCHEMA)["type"];
 
 /**
  * Given an article, this analyzes the article to extract the
- * team it is associate with, the league it is associated with,
+ * team it is associated with, the league it is associated with,
  * and a summary of the key takeaways from the article.
  *
  * @param title The title of the article.

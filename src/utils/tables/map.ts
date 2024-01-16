@@ -11,8 +11,8 @@ import { mapTableBody } from "./body";
  *
  * The body mapper will map over each cell in each row of the table.
  *
- * The final shape will be the same as the original table, but with only a singleton
- * header. The number of body rows and cells per row will be the same.
+ * The final shape will be the same as the original table, but with only a single
+ * header row. The number of body rows and cells per row will be the same.
  *
  * @param table The table to map over.
  * @param headFn The function to map over the headers.

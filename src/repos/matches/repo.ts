@@ -52,18 +52,18 @@ export class MatchRepo {
     const rows = await page.locator(MATCH_LOCATOR).all();
 
     // Retrieve the raw text from each cell in each row.
-    const raw_teams = await Promise.all(
+    const rawTeams = await Promise.all(
       rows.map((match) => match.locator(TEAM_LOCATOR).allTextContents())
     );
 
     // Validate that the rows match our shape assumptions.
-    if (raw_teams.some((teams) => teams.length !== 2)) {
+    if (rawTeams.some((teams) => teams.length !== 2)) {
       throw new Error("Unexpected number of teams in a match");
     }
 
     // Validate we're not reading empty cells or something
     if (
-      raw_teams.some((teams) =>
+      rawTeams.some((teams) =>
         teams.some((team) => team == null || team === "")
       )
     ) {
@@ -71,6 +71,6 @@ export class MatchRepo {
     }
 
     // Note: We can safely assume no nulls because we validated the shape.
-    return raw_teams.map(([away, home]) => new Match(away!, home!));
+    return rawTeams.map(([away, home]) => new Match(away!, home!));
   }
 }
