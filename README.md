@@ -3,6 +3,11 @@
 This is an LLM agent built on top of OpenAI that predicts winners for [ESPN's
 Pick-Em's game](https://fantasy.espn.com/games/nfl-pigskin-pickem-2023).
 
+For the 2023 NFL season, this agent won my local group's pick-em's competition
+and came in the top 15% across all of ESPN's users (~one million users
+played). The top player across all of ESPN for 2023 correctly chose 195 games
+(~71%). This agent correctly chose 163 (~60%).
+
 ## How Does It Work?
 
 At a high-level, the agent crawls a bunch of statistics and news articles on
