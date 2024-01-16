@@ -129,7 +129,7 @@ generation of the data in the `conclusion`.
 A lot of LLM techniques, like [Chain-of-Thought
 (CoT)](https://en.wikipedia.org/wiki/Prompt_engineering#Chain-of-thought)
 require that the LLM generates a sequence of tokens that it can then reference
-on for it's final answer. If your `Prompt` to the `Tool` asks the LLM to use
+on for its final answer. If your `Prompt` to the `Tool` asks the LLM to use
 any strategy like this, and you don't give it a scratchpad of sorts to write
 in, then it won't be able to use that pattern. So this `analysis` field is a
 scratchpad that we offer to the LLM to write whatever it needs to before
