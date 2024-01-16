@@ -20,3 +20,13 @@ export const CONFIG = {
     process.env.ESPN_MATCHES_URL ||
     "https://fantasy.espn.com/games/nfl-pigskin-pickem-2023/make-picks",
 };
+
+// Fail loudly if the OPENAI_API_KEY is still the default value
+if (
+  CONFIG.OPENAI_API_KEY ===
+  "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+) {
+  throw new Error(
+    "Please set the OPENAI_API_KEY in your .env file to a non-default value."
+  );
+}
