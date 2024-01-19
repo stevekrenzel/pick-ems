@@ -1,15 +1,10 @@
 import OpenAI from "openai";
-import { config } from "dotenv";
 import { JSONSchema } from "json-schema-to-ts";
 import { SCHEMA } from "./schema";
-
-config();
-
-const API_KEY = process.env.OPENAI_API_KEY;
-const VERBOSE = process.env.VERBOSE === "true";
+import { CONFIG } from "../../config";
 
 const openai = new OpenAI({
-  apiKey: API_KEY,
+  apiKey: CONFIG.OPENAI_API_KEY,
 });
 
 /**
@@ -25,7 +20,7 @@ export async function llm<T>(
   // TODO: There is a lot going on this function. We should
   // break it up / clean it up.
 
-  if (VERBOSE) {
+  if (CONFIG.VERBOSE) {
     console.log("=============================================");
     console.log("Starting request to LLM:");
     console.log("\nSYSTEM:\n", systemPrompt);
@@ -80,7 +75,7 @@ export async function llm<T>(
     throw new Error("LLM did not return arguments to parse");
   }
 
-  if (VERBOSE) {
+  if (CONFIG.VERBOSE) {
     console.log("\nRESPONSE:\n");
     console.log(JSON.stringify(JSON.parse(content), null, 2));
     console.log("=============================================");
