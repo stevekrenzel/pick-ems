@@ -1,1 +1,2 @@
-export { newsAnalyst, NewsAnalysis } from "./tool";
+export { newsAnalyst } from "./tool";
+export type { NewsAnalysis } from "./tool";

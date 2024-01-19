@@ -1,8 +1,8 @@
 {
   "include": ["src/**/*", "test/**/*"],
   "compilerOptions": {
-    "lib": ["ES2023"],
-    "target": "ES2022",
+    "lib": ["ESNext"],
+    "target": "ESNext",
     "baseUrl": "./src",
     "allowJs": true,
     "allowUnreachableCode": false,
@@ -12,7 +12,9 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "incremental": true,
-    "module": "commonjs",
+    "module": "esnext",
+    "moduleResolution": "nodenext",
+    "types": ["bun-types"],
     "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
