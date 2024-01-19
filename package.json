@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "postinstall": "cp -n .env.example .env && npm run add-hooks && npx playwright install",
+    "postinstall": "(cp -n .env.example .env || true) && npm run add-hooks && npx playwright install",
     "test": "npm run clean && npm run build && npx jest",
     "watch": "npx nodemon --watch src --watch test -e js,ts -x 'npm run test'",
     "build": "npm run clean && npx tsc",
