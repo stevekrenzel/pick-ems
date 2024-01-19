@@ -64,7 +64,6 @@
     "lint-staged": "^13.2.2",
     "nodemon": "^3.0.1",
     "prettier": "^2.8.8",
-    "tslib": "^2.5.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
