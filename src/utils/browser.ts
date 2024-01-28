@@ -1,38 +1,26 @@
-import { Browser, BrowserContext, chromium, Page, Locator } from "playwright";
+import { Browser, chromium, Page, Locator } from "playwright";
 import { CONFIG } from "../config";
 
-let PAGE_SINGLETON: Page | null = null;
 let BROWSER_SINGLETON: Browser | null = null;
-let CONTEXT_SINGLETON: BrowserContext | null = null;
 
 /**
- * Returns a shared browser instance.
- *
- * Note: The type of this function is `Page`
- * but in Playwright parlance, `Page` is the
- * "browser" (actually a tab in the browser),
- * so this is what we return because it semantically
- * makes more sense.
+ * Returns a new browser page in it's own context.
  *
  * @returns {Promise<Page>}
  */
-export async function getBrowserInstance(): Promise<Page> {
-  if (PAGE_SINGLETON != null) {
-    return PAGE_SINGLETON;
+async function newPage(): Promise<Page> {
+  if (BROWSER_SINGLETON != null) {
+    const context = await BROWSER_SINGLETON.newContext();
+    return context.newPage();
   }
 
   const browser = await chromium.launch({
     headless: CONFIG.HEADLESS,
     slowMo: 100,
   });
-  const context = await browser.newContext();
-  const page = await context.newPage();
 
-  PAGE_SINGLETON = page;
   BROWSER_SINGLETON = browser;
-  CONTEXT_SINGLETON = context;
-
-  return page;
+  return newPage();
 }
 
 /**
@@ -41,21 +29,13 @@ export async function getBrowserInstance(): Promise<Page> {
  * @returns {Promise<void>}
  */
 export async function closeBrowser(): Promise<void> {
-  if (
-    PAGE_SINGLETON == null ||
-    BROWSER_SINGLETON == null ||
-    CONTEXT_SINGLETON == null
-  ) {
+  if (BROWSER_SINGLETON == null) {
     return;
   }
 
-  await PAGE_SINGLETON.close();
-  await CONTEXT_SINGLETON.close();
   await BROWSER_SINGLETON.close();
 
-  PAGE_SINGLETON = null;
   BROWSER_SINGLETON = null;
-  CONTEXT_SINGLETON = null;
 }
 
 /**
@@ -69,8 +49,11 @@ export async function navigateTo(
   url: string,
   waitForVisible: string
 ): Promise<Locator> {
-  const browser = await getBrowserInstance();
-  await browser.goto(url);
+  const browser = await newPage();
+
+  // We load *a lot* of pages in parallel. Increase the timeout to
+  // account for this.
+  await browser.goto(url, { timeout: 120000 });
 
   const container = browser.locator(waitForVisible);
   await container.waitFor({ state: "visible" });
