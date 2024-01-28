@@ -59,6 +59,10 @@ export class ArticleRepo {
     // all sharing the same browser instance.
     const articles: Article[] = [];
     for (const url of urls) {
+      if (!url.hostname.includes("espn.com")) {
+        continue; // Skip non-ESPN articles. They tend to be ads.
+      }
+
       try {
         const article = await ArticleRepo.fetchOne(url);
         articles.push(article);
