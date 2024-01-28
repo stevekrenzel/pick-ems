@@ -47,7 +47,7 @@ export class TeamStatsRepo {
    */
   public async list(): Promise<TeamStats[]> {
     if (TeamStatsRepo.teamStats == null) {
-      TeamStatsRepo.teamStats = await this.fetchAll();
+      TeamStatsRepo.teamStats = await TeamStatsRepo.fetchAll();
     }
     return TeamStatsRepo.teamStats;
   }
@@ -57,11 +57,11 @@ export class TeamStatsRepo {
    *
    * @returns {Promise<TeamStats[]>} All of the stats we could find.
    */
-  private async fetchAll(): Promise<TeamStats[]> {
+  private static async fetchAll(): Promise<TeamStats[]> {
     const teamStats: TeamStats[] = [];
 
     for (const type of Object.values(StatType)) {
-      const stats = await this.fetchType(type);
+      const stats = await TeamStatsRepo.fetchType(type);
       teamStats.push(...stats);
     }
 
@@ -74,9 +74,9 @@ export class TeamStatsRepo {
    * @param type The type of stats to scrape. (e.g. offense, defense, etc.)
    * @returns {Promise<TeamStats[]>} The stats of the given type for all teams.
    */
-  private async fetchType(type: StatType): Promise<TeamStats[]> {
+  private static async fetchType(type: StatType): Promise<TeamStats[]> {
     const page = await navigateTo(SOURCES[type], WAIT_FOR);
-    const table = await this.parseStatsTables(page);
+    const table = await TeamStatsRepo.parseStatsTables(page);
     const team_name_column_index = table.headers.indexOf(TEAM_NAME_COLUMN);
 
     const teamStats: TeamStats[] = [];
@@ -124,15 +124,15 @@ export class TeamStatsRepo {
    * @param page The page to extract the tables from.
    * @returns {Promise<Table>} The parsed tables.
    */
-  private async parseStatsTables(page: Locator): Promise<Table> {
+  private static async parseStatsTables(page: Locator): Promise<Table> {
     const [namesTable, dataTable] = await page.locator(STATS_TABLE).all();
 
     if (namesTable == null || dataTable == null) {
       throw new Error(`Tables are missing from ${page.page().url()}`);
     }
 
-    const names = await this.getTeamNamesTable(namesTable);
-    const data = await this.getTeamDataTable(dataTable);
+    const names = await TeamStatsRepo.getTeamNamesTable(namesTable);
+    const data = await TeamStatsRepo.getTeamDataTable(dataTable);
     return concatTables(names, data);
   }
 
@@ -156,7 +156,7 @@ export class TeamStatsRepo {
    * @param table The table to parse.
    * @returns {Promise<Table>} The parsed table.
    */
-  private async getTeamNamesTable(table: Locator): Promise<Table> {
+  private static async getTeamNamesTable(table: Locator): Promise<Table> {
     // With the nested headers, we just want the last value, which
     // should be the string "Team"
     const headerMapper = async (header: Locator[]) => {
@@ -195,7 +195,9 @@ export class TeamStatsRepo {
    * @param table The table to parse.
    * @returns {Promise<Table>} The parsed table.
    */
-  private async getTeamDataTable(table: Locator): Promise<Table<string>> {
+  private static async getTeamDataTable(
+    table: Locator
+  ): Promise<Table<string>> {
     // The last header cell for each nested header has a span
     // with a title that contains the value we want. (e.g. "Total Passing Yards")
     const headerMapper = async (header: Locator[]) => {

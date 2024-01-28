@@ -23,7 +23,7 @@ export class MatchRepo {
    */
   public async list(): Promise<Match[]> {
     if (MatchRepo.matches == null) {
-      MatchRepo.matches = await this.fetch();
+      MatchRepo.matches = await MatchRepo.fetch();
     }
     return MatchRepo.matches;
   }
@@ -47,7 +47,7 @@ export class MatchRepo {
    *
    * Each row in the table is a game match, and each game match has two teams.
    */
-  private async fetch(): Promise<Match[]> {
+  private static async fetch(): Promise<Match[]> {
     const page = await navigateTo(URL, WAIT_FOR);
     const rows = await page.locator(MATCH_LOCATOR).all();
 

@@ -49,7 +49,7 @@ export class TeamRepo {
    */
   public async list(): Promise<Team[]> {
     if (TeamRepo.teams == null) {
-      TeamRepo.teams = await this.fetch();
+      TeamRepo.teams = await TeamRepo.fetch();
     }
     return TeamRepo.teams;
   }
@@ -60,7 +60,7 @@ export class TeamRepo {
    *
    * @returns {Promise<Team[]>} The list of teams in the NFL.
    */
-  private async fetch(): Promise<Team[]> {
+  private static async fetch(): Promise<Team[]> {
     const locator = await navigateTo(URL, WAIT_FOR);
     const headers = await locator.locator(SELECTOR).allTextContents();
     return headers.filter((team) => team != null).map((team) => new Team(team));

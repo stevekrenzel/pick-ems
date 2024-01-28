@@ -40,7 +40,7 @@ export class ArticleRepo {
    */
   public async list(): Promise<Article[]> {
     if (ArticleRepo.articles == null) {
-      ArticleRepo.articles = await this.fetchAll();
+      ArticleRepo.articles = await ArticleRepo.fetchAll();
     }
     return ArticleRepo.articles;
   }
@@ -51,7 +51,7 @@ export class ArticleRepo {
    *
    * @returns {Promise<Article[]>} The list of articles for current headlines.
    */
-  private async fetchAll(): Promise<Article[]> {
+  private static async fetchAll(): Promise<Article[]> {
     const urls = await getHeadlineUrls();
 
     // NOTE: We explicitly use a for-loop instead of `Promise.all` here because
@@ -60,7 +60,7 @@ export class ArticleRepo {
     const articles: Article[] = [];
     for (const url of urls) {
       try {
-        const article = await this.fetchOne(url);
+        const article = await ArticleRepo.fetchOne(url);
         articles.push(article);
       } catch (e) {
         // Sometimes things timeout or a rogue headline sneaks in
@@ -78,11 +78,11 @@ export class ArticleRepo {
    * @param url The URL of the article to scrape.
    * @returns {Promise<Article>} The article.
    */
-  private async fetchOne(url: URL): Promise<Article> {
+  private static async fetchOne(url: URL): Promise<Article> {
     const page = await navigateTo(url.toString(), WAIT_FOR);
 
-    const title = await this.getTitle(page);
-    const content = await this.getContent(page);
+    const title = await ArticleRepo.getTitle(page);
+    const content = await ArticleRepo.getContent(page);
     const { primaryTeam, summary, league } = await newsAnalyst(title, content);
 
     return new Article(title, content, summary, url, primaryTeam, league);
@@ -94,7 +94,7 @@ export class ArticleRepo {
    * @param page The page to scrape.
    * @returns {Promise<string>} The title of the article.
    */
-  private async getTitle(page: Locator): Promise<string> {
+  private static async getTitle(page: Locator): Promise<string> {
     const title = await page.locator(ARTICLE_TITLE).textContent();
 
     if (title == null || title.length == 0) {
@@ -110,7 +110,7 @@ export class ArticleRepo {
    * @param page The page to scrape.
    * @returns {Promise<string>} The content of the article.
    */
-  private async getContent(page: Locator): Promise<string> {
+  private static async getContent(page: Locator): Promise<string> {
     const paragraphs = await page.locator(ARTICLE_CONTENT).all();
     const content = await Promise.all(paragraphs.map((p) => p.textContent()));
     return content.join("\n\n");
