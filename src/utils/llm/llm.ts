@@ -5,6 +5,7 @@ import { CONFIG } from "../../config";
 
 const openai = new OpenAI({
   apiKey: CONFIG.OPENAI_API_KEY,
+  organization: CONFIG.OPENAI_ORG_ID,
 });
 
 /**
@@ -51,7 +52,7 @@ export async function llm<T>(
         content: JSON.stringify(userPrompt),
       },
     ],
-    model: "gpt-4-1106-preview",
+    model: CONFIG.OPENAI_MODEL,
     temperature: 0.1,
     max_tokens: 4000,
     tool_choice: { type: "function", function: { name: "response" } },
