@@ -10,8 +10,10 @@ import { Match } from "../../repos";
  * @returns The name of the winning team.
  */
 export async function predictWinner(match: Match): Promise<string> {
-  const articles = await match.articles();
-  const stats = await match.stats();
+  const [articles, stats] = await Promise.all([
+    match.articles(),
+    match.stats(),
+  ]);
 
   const systemPrompt = SYSTEM_PROMPT(stats, match, articles);
   const response = await llm(systemPrompt, match, SCHEMA);

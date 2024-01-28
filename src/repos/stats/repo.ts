@@ -19,7 +19,7 @@ const SOURCES: { [key in StatType]: string } = {
  * offense, defense, turnovers, and special teams.
  */
 export class TeamStatsRepo {
-  private static teamStats: TeamStats[] | null = null;
+  private static teamStats: Promise<TeamStats[]> | null = null;
 
   /**
    * Retrieve stats for the given team and stat type.
@@ -45,9 +45,9 @@ export class TeamStatsRepo {
   /**
    * Retrieve all stats for all teams.
    */
-  public async list(): Promise<TeamStats[]> {
+  public list(): Promise<TeamStats[]> {
     if (TeamStatsRepo.teamStats == null) {
-      TeamStatsRepo.teamStats = await TeamStatsRepo.fetchAll();
+      TeamStatsRepo.teamStats = TeamStatsRepo.fetchAll();
     }
     return TeamStatsRepo.teamStats;
   }
@@ -58,14 +58,13 @@ export class TeamStatsRepo {
    * @returns {Promise<TeamStats[]>} All of the stats we could find.
    */
   private static async fetchAll(): Promise<TeamStats[]> {
-    const teamStats: TeamStats[] = [];
+    const types: StatType[] = Object.values(StatType);
+    const stats: TeamStats[][] = await Promise.all(
+      types.map((type) => TeamStatsRepo.fetchType(type))
+    );
 
-    for (const type of Object.values(StatType)) {
-      const stats = await TeamStatsRepo.fetchType(type);
-      teamStats.push(...stats);
-    }
-
-    return teamStats;
+    // Return flattened array of all stats
+    return stats.reduce((flattened, stats) => [...flattened, ...stats], []);
   }
 
   /**

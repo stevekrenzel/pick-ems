@@ -10,7 +10,7 @@ const SELECTOR = ".TeamLinks h2";
  */
 export class TeamRepo {
   // Cached list of teams
-  private static teams: Team[] | null = null;
+  private static teams: Promise<Team[]> | null = null;
 
   /**
    * Find a team by name.
@@ -47,9 +47,9 @@ export class TeamRepo {
    *
    * @returns {Promise<Team[]>} The list of teams in the NFL.
    */
-  public async list(): Promise<Team[]> {
+  public list(): Promise<Team[]> {
     if (TeamRepo.teams == null) {
-      TeamRepo.teams = await TeamRepo.fetch();
+      TeamRepo.teams = TeamRepo.fetch();
     }
     return TeamRepo.teams;
   }

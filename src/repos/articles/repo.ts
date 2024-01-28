@@ -13,7 +13,7 @@ const ARTICLE_CONTENT = ".article-body p";
  */
 export class ArticleRepo {
   // Cached list of articles for the week.
-  private static articles: Article[] | null = null;
+  private static articles: Promise<Article[]> | null = null;
 
   /**
    * Get the list of articles associated with the given teams.
@@ -38,9 +38,9 @@ export class ArticleRepo {
    *
    * @returns {Promise<Article[]>} The list of articles for current headlines.
    */
-  public async list(): Promise<Article[]> {
+  public list(): Promise<Article[]> {
     if (ArticleRepo.articles == null) {
-      ArticleRepo.articles = await ArticleRepo.fetchAll();
+      ArticleRepo.articles = ArticleRepo.fetchAll();
     }
     return ArticleRepo.articles;
   }
@@ -54,26 +54,13 @@ export class ArticleRepo {
   private static async fetchAll(): Promise<Article[]> {
     const urls = await getHeadlineUrls();
 
-    // NOTE: We explicitly use a for-loop instead of `Promise.all` here because
-    // we want to force sequential execution (instead of parallel) because these are
-    // all sharing the same browser instance.
-    const articles: Article[] = [];
-    for (const url of urls) {
-      if (!url.hostname.includes("espn.com")) {
-        continue; // Skip non-ESPN articles. They tend to be ads.
-      }
-
-      try {
-        const article = await ArticleRepo.fetchOne(url);
-        articles.push(article);
-      } catch (e) {
-        // Sometimes things timeout or a rogue headline sneaks in
-        // that is actually an ad. We ignore it and move on.
-        continue;
-      }
-    }
-
-    return articles;
+    return Promise.all(
+      urls
+        // Skip non-ESPN articles. They tend to be ads.
+        // Only scrape ESPN articles. Some "headlines" are ads on other domains.
+        .filter((url) => url.hostname.includes("espn.com"))
+        .map((url) => ArticleRepo.fetchOne(url))
+    );
   }
 
   /**

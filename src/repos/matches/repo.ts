@@ -11,7 +11,7 @@ const TEAM_LOCATOR = ".OutcomeDetails-title";
  */
 export class MatchRepo {
   // Cached list of matches for the week.
-  private static matches: Match[] | null = null;
+  private static matches: Promise<Match[]> | null = null;
 
   /**
    * Get the list of matches for the week.
@@ -21,9 +21,9 @@ export class MatchRepo {
    *
    * @returns {Promise<Match[]>} The list of matches for the week.
    */
-  public async list(): Promise<Match[]> {
+  public list(): Promise<Match[]> {
     if (MatchRepo.matches == null) {
-      MatchRepo.matches = await MatchRepo.fetch();
+      MatchRepo.matches = MatchRepo.fetch();
     }
     return MatchRepo.matches;
   }
